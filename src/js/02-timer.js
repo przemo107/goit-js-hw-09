@@ -1,6 +1,5 @@
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
-import Notiflix from 'notiflix';
 
 const options = {
   enableTime: true,
@@ -34,7 +33,7 @@ function startTimer() {
     document.querySelector('#datetime-picker').value
   );
   const currentDate = new Date();
-  const differenceMs = selectedDate - currentDate;
+  const differenceMs = selectedDate.getTime() - currentDate.getTime();
 
   if (differenceMs <= 0) {
     clearInterval(intervalId);
@@ -55,5 +54,14 @@ function startTimer() {
 }
 
 startButton.addEventListener('click', () => {
-  intervalId;
+  clearInterval(intervalId);
+  intervalId = setInterval(startTimer, 1000);
 });
+
+function convertMs(ms) {
+  const days = Math.floor(ms / (24 * 60 * 60 * 1000));
+  const hours = Math.floor((ms % (24 * 60 * 60 * 1000)) / (60 * 60 * 1000));
+  const minutes = Math.floor((ms % (60 * 60 * 1000)) / (60 * 1000));
+  const seconds = Math.floor((ms % (60 * 1000)) / 1000);
+  return { days, hours, minutes, seconds };
+}
